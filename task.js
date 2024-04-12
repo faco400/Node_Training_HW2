@@ -1,7 +1,7 @@
 function addValues(value1, value2) {
   // console.log(typeof(value1));
   // console.log(typeof(value2));
-  if (typeof(value1) === 'undefined' || typeof(value2) === 'undefined'){
+  if (typeof(value1) === 'undefined' || typeof(value2) === 'undefined' || value1 === null || value2 === null){
     throw new Error('Unable to add values');
   }
 
@@ -15,7 +15,8 @@ function addValues(value1, value2) {
     return BigInt(value1) + BigInt(value2);
   
   } else if (typeof(value1) === 'boolean' && typeof(value2) === 'boolean') {
-    if (value1 + value2 != 0) {
+    // OR operator
+    if (value1 + value2 != 0) { 
       return true
     } else {
       return false
@@ -31,7 +32,22 @@ function addValues(value1, value2) {
   }
 }
 
+function invertBoolean(bool) {
+  if (typeof(bool) === 'boolean' || bool == 1 || bool == 0) {
+    if (bool == true) {
+      return false;
+    }  else {
+      return true;
+    }
+  } else {
+    throw new Error('Unable to invert boolean');
+  }
+}
 
+
+// debugging...
+
+//addValues()
 // console.log(addValues(1,-1));
 // console.log(addValues('string1','STRING2'));
 // console.log(addValues(1234567890123456789012345n, 21212121212121212121212n));
@@ -41,3 +57,12 @@ function addValues(value1, value2) {
 // console.log(addValues({name: 'vinicius'}, {age: 24}));
 // console.log(addValues([12],[13]));
 // console.log(addValues([12],['hello']));
+
+
+//invertBoolean()
+// console.log(invertBoolean(true));
+// console.log(invertBoolean(false));
+// console.log(invertBoolean(1));
+// console.log(invertBoolean('1'));
+// console.log(invertBoolean(0));
+// console.log(invertBoolean('0'));
