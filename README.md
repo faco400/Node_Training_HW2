@@ -15,3 +15,9 @@ Create a JavaScript library that provides advanced data transformation functions
 - ***coerceToType:*** Accepts two arguments: value and type. It attempts to convert the value to the specified type using type coercion. The function should return the coerced value if successful. If the coercion is not possible, it should throw an error.
 
 **(Optional)** Implement additional functions of your choice that demonstrate advanced type conversion scenarios or cater to specific use cases related to primitive types. You are encouraged to explore complex scenarios and push the limits of type conversion.
+
+# How to Run
+To run the file, execute the following command on the project directory:
+```terminal
+node task.js
+```
