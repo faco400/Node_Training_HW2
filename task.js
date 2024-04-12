@@ -38,16 +38,15 @@ function addValues(value1, value2) {
 
 function invertBoolean(bool) {
   try {
-    if (typeof(bool) === 'boolean' || bool == 1 || bool == 0) {
+    if (typeof(bool) === 'boolean' || bool == 1 || bool == 0 || bool == '1' || bool =='0') {
       if (bool == true) {
         return false;
       }  else {
         return true;
       }
     }
-
     throw new Error('Unable to invert boolean');
-
+    
   } catch (err) {
     console.error(err);
   }
@@ -70,22 +69,58 @@ function stringifyValue(value) {
 function convertToNumber(value) {
   try {
     if (typeof(value) === 'string'){
-      return parseFloat(value);
+      const floatValue = parseFloat(value);
+      if (!isNaN(floatValue)) {
+        return floatValue;
+
+      } else {
+        const intValue = parseInt(value)
+        if (!isNaN(intValue))
+          return intValue
+      }
+
     } else if (typeof(value) === 'boolean') {
       if (value == true) {
         return 1;
       } else {
         return 0;
       }
+
     } else if (typeof(value) === 'bigint') {
       return Number(value)
+
+    } else if (typeof(value) === 'object') {
+      const stringValue = JSON.stringify();
+      const floatValue = parseFloat(stringValue);
+      if (!isNaN(floatValue))
+          return floatValue
+
     }
 
-    if(!isNaN(value))
-      return value;
+    if (typeof(value) === 'number')
+      return value
+
+    throw new Error('Unable to convertToNumber');
 
   } catch (err) {
     console.error(err);
+  }
+}
+
+function coerceToType(value, type) {
+  if (type.toLowerCase() == 'number') {
+    return convertToNumber(value);
+
+  } else if (type.toLowerCase() == 'string') {
+    return stringifyValue(value);
+  
+  } else if (type.toLowerCase() == 'boolean') {
+    const statement = invertBoolean(value);
+    if (statement == 1){
+      return false;
+    } else if (statement == 0) {
+      return true
+    }
   }
 }
 
@@ -127,3 +162,21 @@ function convertToNumber(value) {
 // console.log(convertToNumber('1999'));
 // console.log(convertToNumber(999999n));
 
+//coerceToType()
+// console.log(coerceToType(1,'number'));
+// console.log(coerceToType('1444', 'Number'));
+// console.log(coerceToType(true,'number'));
+// console.log(coerceToType(false,'number'));
+// console.log(coerceToType(1212121n, 'number'));
+// console.log(coerceToType({name: 'vinicius'}, 'number'));
+// console.log(coerceToType('vinicius', 'number')); // forcing error
+// console.log(coerceToType(1,'string'));
+// console.log(coerceToType('128.2','string'));
+// console.log(coerceToType(true,'string'));
+// console.log(coerceToType(1234n,'string'));
+// console.log(coerceToType([123, 1], 'string'));
+// console.log(coerceToType({name: 'vinicius', age: 24},'string'));
+// console.log(coerceToType('1','boolean'));
+// console.log(coerceToType(1,'boolean'));
+// console.log(coerceToType(0,'boolean'));
+// console.log(coerceToType('2','boolean')); // forcing error
