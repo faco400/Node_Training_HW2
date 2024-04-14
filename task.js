@@ -1,3 +1,18 @@
+function addElementArrays(array1, array2) {
+  let max_length = array1.length > array2.length ? array1.length : array2.length;
+  let arrayResult = []
+  for (let i = 0; i < max_length; i++) {
+    if(typeof(array1[i]) !== 'undefined' && typeof(array2[i]) !== 'undefined') {
+      arrayResult[i] = addValues(array1[i],array2[i]);
+    } else if (typeof(array1[i]) === 'undefined') {
+      arrayResult[i] = array2[i];
+    } else if (typeof(array2[i]) === 'undefined') {
+      arrayResult[i] = array1[i];
+    }
+  }
+  return arrayResult;
+}
+
 function addValues(value1, value2) {
   try{
     // console.log(typeof(value1));
@@ -6,27 +21,38 @@ function addValues(value1, value2) {
       throw new Error('Unable to add values');
     }
 
-    if (typeof(value1) === 'string' && typeof(value2) === 'string'){
-      return value1.toString() + value2.toString();
-
-    } else if (typeof(value1) === 'number' && typeof(value2) === 'number') {
+    if (typeof(value1) === 'number' && typeof(value2) === 'number' && !isNaN(value1) && !isNaN(value2) ||
+        typeof(value1) === 'string' && typeof(value2) === 'string' ||
+        typeof(value1) === 'bigint' && typeof(value2) === 'bigint') {
       return value1 + value2;
-
-    } else if (typeof(value1) === 'bigint' && typeof(value2) === 'bigint'){
-      return BigInt(value1) + BigInt(value2);
-    
+      
     } else if (typeof(value1) === 'boolean' && typeof(value2) === 'boolean') {
-      // OR operator
-      if (value1 + value2 != 0) { 
+      // true and true == true
+      if (value1 + value2 == 2) { 
         return true
       } else {
+      // false and ? == false
         return false
       }
 
     } else if (Array.isArray(value1) && Array.isArray(value2)) {
-      return [...value1, ...value2]
+      if(value1.every(item => typeof(item) === 'string' && value2.every(item => typeof(item) === 'string') || 
+        value1.every(item => typeof(item) === 'number' && value2.every(item => typeof(item) === 'number')))) {
+        return addElementArrays(value1, value2);
+      }
+
     } else if (typeof(value1) === 'object' && typeof(value2) === 'object') {
       let obj = {...value1, ...value2}; // spreading
+      const keys = Object.keys(obj);
+      const keys1 = Object.keys(value1);
+      const keys2 = Object.keys(value2);
+
+      for (let i = 0; i <= keys.length - 1; i++) {
+        if (keys1.includes(keys[i]) && keys2.includes(keys[i])) {
+          //rescursive call to add values of elements
+          obj[keys[i]] = addValues(value1[keys[i]],value2[keys[i]]);
+        }
+      }
       return obj;
     }
 
@@ -38,7 +64,7 @@ function addValues(value1, value2) {
 
 function invertBoolean(bool) {
   try {
-    if (typeof(bool) === 'boolean' || bool == 1 || bool == 0 || bool == '1' || bool =='0') {
+    if (typeof(bool) === 'boolean') {
       if (bool == true) {
         return false;
       }  else {
@@ -134,7 +160,11 @@ function coerceToType(value, type) {
 // console.log(addValues(true, true));
 // console.log(addValues(false, true));
 // console.log(addValues({name: 'vinicius'}, {age: 24}));
+// console.log(addValues({name: 'vinicius', age: 10}, {age: 24}));
+// console.log(addValues({name: 'vinicius', age: 10}, {name: 'souza', age: 24}));
+// console.log(addValues({name: 'vinicius', parents: ['Alexandre']}, {name: 'souza', age: 24, parents: [,'Maria']}));
 // console.log(addValues([12],[13]));
+// console.log(addValues([12],[13, 15]));
 // console.log(addValues([12],['hello']));
 // console.log(addValues(1,2n));
 
