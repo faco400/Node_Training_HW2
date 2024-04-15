@@ -15,8 +15,6 @@ function addElementArrays(array1, array2) {
 
 function addValues(value1, value2) {
   try{
-    // console.log(typeof(value1));
-    // console.log(typeof(value2));
     if (typeof(value1) === 'undefined' || typeof(value2) === 'undefined' || value1 === null || value2 === null){
       throw new Error('Unable to add values');
     }
@@ -36,9 +34,16 @@ function addValues(value1, value2) {
       }
 
     } else if (Array.isArray(value1) && Array.isArray(value2)) {
-      if(value1.every(item => typeof(item) === 'string' && value2.every(item => typeof(item) === 'string') || 
-        value1.every(item => typeof(item) === 'number' && value2.every(item => typeof(item) === 'number')))) {
-        return addElementArrays(value1, value2);
+      if (value1.length != value2.length) 
+        throw new Error ('Unable to add values');
+
+      if(value1.every(item => typeof(item) === 'string') && value2.every(item => typeof(item) === 'string') || 
+        value1.every(item => typeof(item) === 'number') && value2.every(item => typeof(item) === 'number') ||
+        value1.every(item => typeof(item) === 'bigint') && value2.every(item => typeof(item) === 'bigint') ||
+        value1.every(item => typeof(item) === 'boolean') && value2.every(item => typeof(item) === 'boolean')) {
+          let array = [...value1, ...value2]
+          // return addElementArrays(value1, value2);
+          return array;
       }
 
     } else if (typeof(value1) === 'object' && typeof(value2) === 'object') {
@@ -164,6 +169,7 @@ function coerceToType(value, type) {
 // console.log(addValues({name: 'vinicius', age: 10}, {name: 'souza', age: 24}));
 // console.log(addValues({name: 'vinicius', parents: ['Alexandre']}, {name: 'souza', age: 24, parents: [,'Maria']}));
 // console.log(addValues([12],[13]));
+// console.log(addValues([11,12],[10,13]));
 // console.log(addValues([12],[13, 15]));
 // console.log(addValues([12],['hello']));
 // console.log(addValues(1,2n));
